@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
      curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
      apt-get update
-     apt-get install -y docker-ce
+     apt-get install -y docker-ce=18.06.1~ce~3-0~debian
      curl -fsSLo /usr/local/bin/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x /usr/local/bin/minikube
      curl -fsSLo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x /usr/local/bin/kubectl
      update-alternatives --set editor /usr/bin/vim.nox
