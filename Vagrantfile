@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
      # Install things
      apt-get update
      apt-get -y dist-upgrade
-     apt-get -y install build-essential git curl vim-nox tmux python3-pip
+     apt-get -y install build-essential git curl vim-nox tmux python3-pip info
      curl -fsSL https://dl.google.com/go/go1.11.linux-amd64.tar.gz | tar -xzC /usr/local
      echo 'export GOPATH="$HOME/go"' >> /etc/profile
      echo 'PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"' >> /etc/profile
