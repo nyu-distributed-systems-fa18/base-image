@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "debian/stretch64"
+  config.vm.box = "debian/buster64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-     vb.memory = 2048
+     vb.memory = 512
      # Add more cores
      vb.cpus = 2
   end
@@ -67,46 +67,16 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
      # Install things
+     echo deb http://deb.debian.org/debian buster main contrib non-free > /etc/apt/sources.list
+     echo deb-src http://deb.debian.org/debian buster main contrib non-free >> /etc/apt/sources.list
+     echo deb http://security.debian.org/debian-security buster/updates main contrib non-free >> /etc/apt/sources.list
+     echo deb-src http://security.debian.org/debian-security buster/updates main contrib non-free >> /etc/apt/sources.list
      apt-get update
      apt-get -y dist-upgrade
      apt-get -y install build-essential git curl vim-nox tmux python3-pip info
-     curl -fsSL https://dl.google.com/go/go1.11.linux-amd64.tar.gz | tar -xzC /usr/local
-     echo 'export GOPATH="$HOME/go"' >> /etc/profile
+     apt-get -y install manpages manpages-dev manpages-posix manpages-posix-dev
+     apt-get -y install gdb strace htop make automake autoconf pkg-config
      echo 'PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"' >> /etc/profile
-     apt-get -y install apt-transport-https ca-certificates curl gnupg2 software-properties-common
-     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
-     apt-get update
-     apt-get install -y docker-ce=18.06.1~ce~3-0~debian
-     curl -fsSLo /usr/local/bin/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x /usr/local/bin/minikube
-     curl -fsSLo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x /usr/local/bin/kubectl
      update-alternatives --set editor /usr/bin/vim.nox
-
-     # Set the user up
-     usermod -aG docker vagrant
-     sudo -u vagrant echo 'export MINIKUBE_WANTUPDATENOTIFICATION=false' >> /home/vagrant/.bashrc
-     sudo -u vagrant echo 'export KUBECONFIG=$HOME/.kube/config'>>/home/vagrant/.bashrc
-     sudo -u vagrant echo 'export MINIKUBE_WANTREPORTERRORPROMPT=false'>>/home/vagrant/.bashrc
-     sudo -u vagrant echo 'export MINIKUBE_HOME=$HOME' >> /home/vagrant/.bashrc
-     sudo -u vagrant echo 'export CHANGE_MINIKUBE_NONE_USER=true' >> /home/vagrant/.bashrc
-     
-     # Add bash completion for kubectl
-     sudo -u vagrant echo 'source <(kubectl completion bash)' >> /home/vagrant/.bashrc
-     sudo -u vagrant mkdir -p /home/vagrant/.kube
-     sudo -u vagrant touch /home/vagrant/.kube/config
-     sudo -u vagrant mkdir -p /home/vagrant/go/src
-     
-     # Change sudo to preserve some environments
-     echo 'Defaults env_keep+="MINIKUBE_WANTUPDATENOTIFICATION KUBECONFIG MINIKUBE_WANTREPORTERRORPROMPT MINIKUBE_HOME CHANGE_MINIKUBE_NONE_USER"' | EDITOR='tee -a' visudo
-     # Install protoc
-     curl -fsSLo /tmp/protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip
-     unzip /tmp/protoc.zip -x readme.txt -d /usr/local/
-     sudo -u vagrant /usr/local/go/bin/go get -u google.golang.org/grpc
-     sudo -u vagrant /usr/local/go/bin/go get -u github.com/golang/protobuf/protoc-gen-go
-     sudo -u vagrant /usr/local/go/bin/go get -u golang.org/x/lint/golint
-
-     # Setup things for k8s python
-     sudo -u vagrant pip3 install kubernetes # Maybe install this in a venv some day.
-
    SHELL
 end
