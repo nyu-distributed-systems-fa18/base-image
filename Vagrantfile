@@ -46,6 +46,7 @@ Vagrant.configure("2") do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   config.ssh.forward_agent = true
+  config.ssh.forward_x11 = true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -79,6 +80,7 @@ Vagrant.configure("2") do |config|
      apt-get -y install manpages manpages-dev manpages-posix manpages-posix-dev
      apt-get -y install gdb strace htop make automake autoconf pkg-config
      apt-get -y install ctags
+     apt-get -y install gitk
      echo 'PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"' >> /etc/profile
      update-alternatives --set editor /usr/bin/vim.nox
    SHELL
