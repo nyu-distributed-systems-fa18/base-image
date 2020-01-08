@@ -76,12 +76,14 @@ Vagrant.configure("2") do |config|
      echo deb-src http://security.debian.org/debian-security buster/updates main contrib non-free >> /etc/apt/sources.list
      apt-get update
      apt-get -y dist-upgrade
-     apt-get -y install build-essential git curl vim-nox tmux python3-pip info
+     apt-get -y install build-essential git curl vim-nox tmux info clang-format
      apt-get -y install manpages manpages-dev manpages-posix manpages-posix-dev
+     apt-get -y install freebsd-manpages perf-tools-unstable
      apt-get -y install gdb strace htop make automake autoconf pkg-config
      apt-get -y install ctags
      apt-get -y install gitk
-     echo 'PATH="$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin"' >> /etc/profile
+     apt-get -y install bats
+     echo 'PATH="$PATH:$HOME/.local/bin"' >> /etc/profile
      update-alternatives --set editor /usr/bin/vim.nox
    SHELL
 end
